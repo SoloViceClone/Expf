@@ -1,0 +1,11 @@
+for i from 0 to 111111111111_2 by 1_2 do {
+a = i*2^(-13);
+ea = double(exp(a)) * 2^55;
+write(ea," , \n") >> "ea.txt";
+};
+
+for i from 0 to 111111111111_2 by 1_2 do {
+a = i*2^(-13);
+ea = double(exp(-a)) * 2^55;
+write(ea," , \n") >> "ea_n.txt";
+};
