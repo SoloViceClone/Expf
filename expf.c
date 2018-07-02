@@ -1,3 +1,6 @@
+/*
+	Implementation of function exp(x) using fixed point number algorithm
+*/
 using namespace std;
 
 #include <iostream>
