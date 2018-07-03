@@ -31,6 +31,7 @@ static inline int64_t toFixedPoint(const float f) {
 	if (e > 0) {
 		val = val << e;
 	} else {
+		if (e < -63) e = -63;
 		val = val >> (-e);
 	}
 

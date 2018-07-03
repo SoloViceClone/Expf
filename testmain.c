@@ -171,5 +171,5 @@ int main() {
 
 	srand (time (0));
 	cout << setprecision(100);
-	test5();
+	test4();
 }
