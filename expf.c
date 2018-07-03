@@ -48,9 +48,7 @@ static inline int64_t mult(int64_t a, int64_t b) {
 static inline int64_t round(int64_t x) { //round to the nearest integer
 	int64_t val = (x >> 55) << 55;
 	int64_t up = x & ((int64_t)0b1 << 54);
-	if (up) {
-		val += ((int64_t)0b1 << 55);
-	}
+	val += up << 1;
 	return val;
 }
 
@@ -8253,16 +8251,24 @@ static const int64_t ea_n[] __attribute__ ((aligned(64))) = {
 };
 
 float expf64(float x) {
-	int64_t xf = toFixedPoint(x);
-	int64_t inv_log2 = 51978566788454384;
-	int64_t log2 = 24973259072661436;
-	int64_t inf_threshold = 3196577159153180160;
-	if (xf > inf_threshold) {
+	float inf_threshold = 88.72283935546875;
+	if (x > inf_threshold) {
 		binary32 b;
 		b.ui32 = 0b01111111100000000000000000000000;
 		return b.f;
 	}
 
+	int64_t xf = toFixedPoint(x);
+	int64_t inv_log2 = 51978566788454384;
+	int64_t log2 = 24973259072661436;
+	//int64_t inf_threshold = 3196577159153180160;
+	/*
+	if (xf > inf_threshold) {
+		binary32 b;
+		b.ui32 = 0b01111111100000000000000000000000;
+		return b.f;
+	}
+	*/
 	int64_t sup_threshold = -3171603902228002304;
 	if (xf < sup_threshold)
 	{
@@ -8289,7 +8295,7 @@ float expf64(float x) {
 	cout << "z3: " << bitset<64>(z3) << endl;
 #endif
 	int64_t resultFixed;
-	if (y>0) {
+	if (y>=0) {
 		int64_t m = mult(ea_p[a],z3);
 		ey = ea_p[a] + m;
 		uint64_t round = ((uint64_t)ey << 32) >> 63;

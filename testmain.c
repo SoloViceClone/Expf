@@ -114,10 +114,62 @@ void test3() {
 	test(x);
 }
 
+int32_t singleTest(float x) {
+	float ri = expf64(x);
+	float rd = exp(x);
+	int32_t ri2bin = i_from_f(ri);
+	int32_t rd2bin = i_from_f(rd);
+	return ri2bin>rd2bin?(ri2bin-rd2bin):(rd2bin-ri2bin);
+}
+
+/*
+	Exhaustive test for floating point number
+*/
+void test4() {
+	binary32 b;
+	int32_t error = 0;
+	binary32 sup;
+	binary32 inf;
+	sup.ui32 = 0b00000000100000000000000000000000;
+	inf.f = 100;
+	for (uint32_t i = sup.ui32; i < inf.ui32; i++) {
+		b.ui32 = i;
+		int32_t k = singleTest(b.f);
+		
+		if (k>0) {
+			error++;
+			cout << "x : " << b.f << " diff : " << k << endl;
+		}
+	}
+	cout << "Errors : " << error << "/" << inf.ui32-sup.ui32 << endl;
+}
+
+void test4fun() {
+	binary32 b;
+	b.f = 1;
+	cout << bitset<32>(b.ui32) << endl;
+	cout << b.f << endl;
+}
+
+void test5() {
+	binary32 b;
+	b.f = 5.06926562889690940034189988158662931616474205120947971181522007100284099578857421875e-27;
+	//cout << singleTest(b.f) << endl;
+	b.f = expf64(b.f);
+	cout << bitset<32>(b.ui32) << endl;
+	cout << b.f << endl;
+}
+
+/*
+	Get some useful values
+*/
+void test6() {
+
+	cout << FLT_MAX << endl;
+}
 int main() {
 
 	srand (time (0));
 	cout << setprecision(100);
-	test1();
-
+	test5();
 }
