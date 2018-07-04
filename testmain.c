@@ -24,6 +24,12 @@ typedef union {
 	uint32_t ui32;
 } binary32;
 
+typedef union {
+	double d;
+	int64_t i64;
+	uint64_t ui64;
+} binary64;
+
 int32_t i_from_f(float x) {
 	binary32 b;
 	b.f = x;
@@ -153,11 +159,20 @@ void test4fun() {
 
 void test5() {
 	binary32 b;
-	b.f = 5.06926562889690940034189988158662931616474205120947971181522007100284099578857421875e-27;
-	//cout << singleTest(b.f) << endl;
-	b.f = expf64(b.f);
-	cout << bitset<32>(b.ui32) << endl;
+	float x = 23.4893627166748046875;
+	b.f = x;
+	cout << "x : " << bitset<32>(b.ui32) << endl;
+	b.f = expf64(x);
+	cout << "expf64(x) = ";
 	cout << b.f << endl;
+	cout << bitset<32>(b.ui32) << endl;
+
+	double f2 = exp(x);
+	cout << "exp(x)    = ";
+	cout << f2 << endl;
+	binary64 b64;
+	b64.d = f2;
+	cout << bitset<64>(b64.ui64) << endl;
 }
 
 /*
