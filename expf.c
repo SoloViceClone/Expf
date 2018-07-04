@@ -1,5 +1,6 @@
 /*
 	Implementation of function exp(x) using fixed point number algorithm
+	This file is being optimized lol
 */
 using namespace std;
 
