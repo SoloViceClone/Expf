@@ -136,15 +136,15 @@ void test4() {
 	int32_t error = 0;
 	binary32 sup;
 	binary32 inf;
-	sup.ui32 = 0b00000000100000000000000000000000;
-	inf.f = 100;
+	sup.ui32 = 0b00000000100000000000000000000000 ;
+	inf.f = 70;
 	for (uint32_t i = sup.ui32; i < inf.ui32; i++) {
 		b.ui32 = i;
-		int32_t k = singleTest(b.f);
+		int32_t k = singleTest(-b.f);
 		
 		if (k>0) {
 			error++;
-			cout << "x : " << b.f << " diff : " << k << endl;
+			cout << "x : " << -b.f << " diff : " << k << endl;
 		}
 	}
 	cout << "Errors : " << error << "/" << inf.ui32-sup.ui32 << endl;
@@ -159,7 +159,7 @@ void test4fun() {
 
 void test5() {
 	binary32 b;
-	float x = 23.4893627166748046875;
+	float x = -40.5327911376953125;
 	b.f = x;
 	cout << "x : " << bitset<32>(b.ui32) << endl;
 	b.f = expf64(x);
@@ -167,7 +167,7 @@ void test5() {
 	cout << b.f << endl;
 	cout << bitset<32>(b.ui32) << endl;
 
-	double f2 = exp(x);
+	double f2 = exp((double)x);
 	cout << "exp(x)    = ";
 	cout << f2 << endl;
 	binary64 b64;
@@ -182,9 +182,32 @@ void test6() {
 
 	cout << FLT_MAX << endl;
 }
+
+/*
+	Branches collapsing test
+	if (e < -63) e = -63;
+*/
+void test7() {
+	int32_t e = 15;
+	e = ((-1 - ((e+63) >> 31)) & (e + 63)) -63;
+	cout << e << endl;
+}
+
+void test8() {
+	int32_t e = -10;
+	int64_t sign = (int64_t)e >> 63;
+	cout << bitset<64>((int64_t)e) << endl;
+}
+
+void test9() {
+	int64_t x = 10;
+	int64_t sign = -1;
+	x = (x + sign) ^ sign;
+	cout << x << endl;
+}
 int main() {
 
 	srand (time (0));
 	cout << setprecision(100);
-	test4();
+	test5();
 }

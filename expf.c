@@ -26,19 +26,29 @@ static inline int64_t toFixedPoint(const float f) {
 	b.f = f;
 	int32_t e = ((b.ui32 << 1) >> 24) - 127;
 	int64_t mantisse = ((b.ui32 << 9) >> 9);
-	int32_t sign = b.ui32 >> 31;
+	int64_t sign = (int64_t)b.i32 >> 63;
 	int64_t val = (mantisse << 32) + ((int64_t)0b1 << 55);
-	
+
+	//if (e < -63) e = -63;
+	e = ((-1 - ((e + 56) >> 31)) & (e + 56)) - 56;
+
+	val = (val << 7) >> (7-e);
+
+	/*
 	if (e > 0) {
 		val = val << e;
 	} else {
-		if (e < -63) e = -63;
 		val = val >> (-e);
 	}
+	*/
 
+	/*
 	if (sign > 0) {
 		val = -val;
 	}
+	*/
+
+	val = (val + sign) ^ sign;
 	return val;
 }
 
