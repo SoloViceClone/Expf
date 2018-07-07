@@ -1,6 +1,8 @@
 /*
 	Implementation of function exp(x) using fixed point number algorithm
-	This file is being optimized lol
+	This file is being optimized
+
+	Im trying to collapse all the branches of this program and trying to use only 1 table of values ea
 */
 using namespace std;
 

@@ -140,11 +140,11 @@ void test4() {
 	inf.f = 70;
 	for (uint32_t i = sup.ui32; i < inf.ui32; i++) {
 		b.ui32 = i;
-		int32_t k = singleTest(-b.f);
+		int32_t k = singleTest(b.f);
 		
 		if (k>0) {
 			error++;
-			cout << "x : " << -b.f << " diff : " << k << endl;
+			cout << "x : " << b.f << " diff : " << k << endl;
 		}
 	}
 	cout << "Errors : " << error << "/" << inf.ui32-sup.ui32 << endl;
@@ -173,6 +173,13 @@ void test5() {
 	binary64 b64;
 	b64.d = f2;
 	cout << bitset<64>(b64.ui64) << endl;
+
+	float f3 = exp(x);
+	cout << "exp(float)= ";
+	binary32 b32;
+	b32.f = f3;
+	cout << f3 << endl;
+	cout << bitset<32>(b32.ui32) << endl;
 }
 
 /*
@@ -209,5 +216,5 @@ int main() {
 
 	srand (time (0));
 	cout << setprecision(100);
-	test5();
+	test4();
 }
