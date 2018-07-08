@@ -137,7 +137,7 @@ void test4() {
 	binary32 sup;
 	binary32 inf;
 	sup.ui32 = 0b00000000100000000000000000000000 ;
-	inf.f = 70;
+	inf.f = 90;
 	for (uint32_t i = sup.ui32; i < inf.ui32; i++) {
 		b.ui32 = i;
 		int32_t k = singleTest(b.f);
@@ -159,7 +159,7 @@ void test4fun() {
 
 void test5() {
 	binary32 b;
-	float x = -40.5327911376953125;
+	float x = 88.72283935546875;
 	b.f = x;
 	cout << "x : " << bitset<32>(b.ui32) << endl;
 	b.f = expf64(x);
@@ -216,5 +216,5 @@ int main() {
 
 	srand (time (0));
 	cout << setprecision(100);
-	test4();
+	test5();
 }
