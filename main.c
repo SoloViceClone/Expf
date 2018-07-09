@@ -122,18 +122,8 @@ void singleTest2(float x) {
 	cout << "Cycle : " << t1-t0 << endl;
 }
 
-void forfun() {
-	int64_t e = -140;
-	//int64_t result = (36028797018963967 + (((e + 126) >> 63) << 55));
-	int64_t result = (-127-e) & ((e+126) >> 63);
-	cout << result << endl;
-	cout << bitset<64>(result) << endl;
-}
-
 int main() {
 	cout << setprecision(100);
-	//exhaustiveTest();
-	singleTest2(88.72017669677734375);
-	//forfun();
+	exhaustiveTest();
 	return 0;
 }
