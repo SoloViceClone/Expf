@@ -152,14 +152,15 @@ void test4() {
 
 void test4fun() {
 	binary32 b;
-	b.f = 1;
+	b.ui32 = 0b01111111110000000000000000000000;
+
 	cout << bitset<32>(b.ui32) << endl;
 	cout << b.f << endl;
 }
 
 void test5() {
 	binary32 b;
-	float x = 88.72283935546875;
+	float x = 7.008015501241970923729240894317626953125e-08;
 	b.f = x;
 	cout << "x : " << bitset<32>(b.ui32) << endl;
 	b.f = expf64(x);
@@ -216,5 +217,5 @@ int main() {
 
 	srand (time (0));
 	cout << setprecision(100);
-	test5();
+	test4fun();
 }

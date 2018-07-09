@@ -31,24 +31,9 @@ static inline int64_t toFixedPoint(const float f) {
 	int64_t sign = (int64_t)b.i32 >> 63;
 	int64_t val = (mantisse << 32) + ((int64_t)0b1 << 55);
 
-	//if (e < -63) e = -63;
 	e = ((-1 - ((e + 56) >> 31)) & (e + 56)) - 56;
 
 	val = (val << 7) >> (7-e);
-
-	/*
-	if (e > 0) {
-		val = val << e;
-	} else {
-		val = val >> (-e);
-	}
-	*/
-
-	/*
-	if (sign > 0) {
-		val = -val;
-	}
-	*/
 
 	val = (val + sign) ^ sign;
 	return val;
@@ -8262,31 +8247,23 @@ static const int64_t ea[] __attribute__ ((aligned(64))) = {
 };
 
 float expf64(float x) {
+	/*
 	float inf_threshold = 88.72283935546875;
-	if (x >= inf_threshold) {
-		binary32 b;
-		b.ui32 = 0b01111111100000000000000000000000;
-		return b.f;
+	
+	*/
+
+	float inf_threshold = 88.72283935546875;
+	float sup_threshold = -103.972076416015625;
+
+	if (__builtin_expect((x >= inf_threshold || x <= sup_threshold), 0)) {
+		if (x >= inf_threshold) return 1.0/0.0;
+		else return 0.0;
 	}
 
 	int64_t xf = toFixedPoint(x);
 	int64_t inv_log2 = 51978566788454384;
 	int64_t log2 = 24973259072661436;
-	//int64_t inf_threshold = 3196577159153180160;
-	/*
-	if (xf > inf_threshold) {
-		binary32 b;
-		b.ui32 = 0b01111111100000000000000000000000;
-		return b.f;
-	}
-	*/
-	int64_t sup_threshold = -3171603902228002304;
-	if (xf < sup_threshold)
-	{
-		return 0.0;
-	}
-
-	int e;
+	int64_t e;
 	int64_t y,a,z;
 	int64_t ey;
 	e = mult(xf,inv_log2) >> 55;
@@ -8308,9 +8285,17 @@ float expf64(float x) {
 	int64_t resultFixed;
 	int64_t m = mult(ea[a],z3);
 	ey = ea[a] + m;
+	/*
 	uint64_t round = ((uint64_t)ey << 32) >> 63;
 	resultFixed = round + ((((uint64_t)ey << 9) >> 9) >> 32);
 	e = 127 + e;
 	result.ui32 = (int32_t)resultFixed + (e << 23);
+	return result.f;
+	*/
+	int64_t shift = ((-126-e) & ((e+126) >> 63)) + 32;
+	resultFixed = (36028797018963967 + (((e + 126) >> 63) << 55)) & ey;
+	resultFixed = (resultFixed >> shift) + ((resultFixed >> (shift-1)) & 1);
+	resultFixed += ((e+127) & (~((e+126) >> 63))) << 23;
+	result.ui32 = (int32_t)resultFixed;
 	return result.f;
 }
