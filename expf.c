@@ -8274,13 +8274,14 @@ float expf64(float x) {
 	int64_t z3 = z + z2; // e^z-1
 	binary32 result;
 #ifdef SBS //step by step
-	cout << "xf: " << bitset<64>(xf) << endl;
-	cout << "e : " << e << endl;
-	cout << "y : " << bitset<64>(y) << endl;
-	cout << "a : " << bitset<64>(a) << endl;
-	cout << "z : " << bitset<64>(z) << endl;
-	cout << "z2: " << bitset<64>(z2) << endl;
-	cout << "z3: " << bitset<64>(z3) << endl;
+	cout << "inv_log2: " << bitset<64>(inv_log2) << endl;
+	cout << "xf      : " << bitset<64>(xf) << endl;
+	cout << "e       : " << e << endl;
+	cout << "y       : " << bitset<64>(y) << endl;
+	cout << "a       : " << bitset<64>(a) << endl;
+	cout << "z       : " << bitset<64>(z) << endl;
+	cout << "z2      : " << bitset<64>(z2) << endl;
+	cout << "z3      : " << bitset<64>(z3) << endl;
 #endif
 	int64_t resultFixed;
 	int64_t m = mult(ea[a],z3);

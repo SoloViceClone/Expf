@@ -8,6 +8,12 @@ using namespace std;
 
 extern float expf64(float x);
 
+extern float dummy(float x);
+
+#define RANDTESTSIZE 0x1000000
+
+float randtest[RANDTESTSIZE];
+
 typedef union {
 	float f;
 	int32_t i32;
@@ -60,6 +66,7 @@ int32_t singleTest(float x) {
 	return ri2bin>rd2bin?(ri2bin-rd2bin):(rd2bin-ri2bin);
 }
 
+
 void exhaustiveTest() {
 	ofstream os("worst_case.txt",ofstream::out);
 	os << setprecision(100);
@@ -90,17 +97,26 @@ void exhaustiveTest() {
 }
 
 void singleTest2(float x) {
+	uint64_t t0,t1,t_empty;
+	t0 = get_cycle_counter();
+	float x1 = dummy(x);
+	t1 = get_cycle_counter();
+	t_empty = t1-t0;
+
+	cout << t_empty << endl;
+
 	binary32 b;
 
 	b.f = x;
 	cout << "x : " << bitset<32>(b.ui32) << endl;
-	uint64_t t0 = get_cycle_counter();
-	b.f = expf64(x);
-	uint64_t t1 = get_cycle_counter();
+	t0 = get_cycle_counter();
+	float f1 = expf64(x);
+	t1 = get_cycle_counter();
+	b.f = f1;
 	cout << "expf64(x) = ";
 	cout << b.f << endl;
 	cout << bitset<32>(b.ui32) << endl;
-	cout << "Cycle : " << t1-t0 << endl;
+	cout << "Cycle : " << t1-t0-t_empty << endl;
 	cout << "----------------------" << endl;
 
 	double f2 = exp((double)x);
@@ -119,11 +135,52 @@ void singleTest2(float x) {
 	b32.f = f3;
 	cout << f3 << endl;
 	cout << bitset<32>(b32.ui32) << endl;
-	cout << "Cycle : " << t1-t0 << endl;
+	cout << "Cycle : " << t1-t0-t_empty << endl;
+}
+
+void randTest() {
+	srand (time (0));
+
+	unsigned long long i;
+
+	for (i=0; i<RANDTESTSIZE; i++) {
+		float x = (float)((unsigned)rand() | 1) / (float)RAND_MAX;
+		//		printf("%llu   %1.34e\n", i,x);
+		randtest[i]=x;
+	}
+
+	uint64_t t0,t1,t_empty;
+	t0 = get_cycle_counter();
+	for (i = 0; i < RANDTESTSIZE; i++) {
+		float x = randtest[i];
+		float y = dummy(x);
+	}
+	t1 = get_cycle_counter();
+	t_empty = t1 - t0;
+	cout << "Empty loop cycles : " << (double)t_empty/RANDTESTSIZE << endl;
+
+	t0 = get_cycle_counter();
+	for (i = 0; i < RANDTESTSIZE; i++) {
+		float x = randtest[i];
+		float y = expf64(x);
+	}
+	t1 = get_cycle_counter();
+	cout << "Expf cycles : " << (double)(t1-t0-t_empty)/RANDTESTSIZE << endl;
+	
+	t0 = get_cycle_counter();
+	for (i = 0; i < RANDTESTSIZE; i++) {
+		float x = randtest[i];
+		float y = expf(x);
+	}
+	t1 = get_cycle_counter();
+	cout << "Libc expf cycles : " << (double)(t1-t0-t_empty)/RANDTESTSIZE << endl;
+
 }
 
 int main() {
-	cout << setprecision(100);
-	exhaustiveTest();
+	cout << setprecision(40);
+	//exhaustiveTest();
+	singleTest2(3);
+	//randTest();
 	return 0;
 }
