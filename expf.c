@@ -8267,25 +8267,37 @@ float expf64(float x) {
 	int64_t y,a,z;
 	int64_t ey;
 	e = mult(xf,inv_log2) >> 55;
+#ifdef SBS
+	cout << bitset<64>(mult(xf,inv_log2)) << endl;
+	cout << bitset<64>(12102203 * (xf >> 32) - 268435456) << endl;
+#endif
+	//e = (12102203 * (xf >> 32) - 268435456) >> 46 ;
 	y = xf - e * log2;
 	a = y >> 42;
 	z = y - (a << 42);
 	int64_t z2 = mult(z,z) >> 1; // e^z - z - 1
 	int64_t z3 = z + z2; // e^z-1
 	binary32 result;
+
+	int64_t resultFixed;
+	__builtin_prefetch(& ea[a], 0, 0);
+	int64_t m = mult(ea[a],z3);
+	ey = ea[a] + m;
 #ifdef SBS //step by step
 	cout << "inv_log2: " << bitset<64>(inv_log2) << endl;
+	cout << (xf >> 32) << endl;
 	cout << "xf      : " << bitset<64>(xf) << endl;
 	cout << "e       : " << e << endl;
+	cout << "e       : " << bitset<64>(e) << endl;	
 	cout << "y       : " << bitset<64>(y) << endl;
 	cout << "a       : " << bitset<64>(a) << endl;
 	cout << "z       : " << bitset<64>(z) << endl;
 	cout << "z2      : " << bitset<64>(z2) << endl;
 	cout << "z3      : " << bitset<64>(z3) << endl;
+	cout << "ea      : " << bitset<64>(ea[a]) << endl;
+	cout << "m       : " << bitset<64>(m) << endl;
+	cout << "ey      : " << bitset<64>(ey) << endl;
 #endif
-	int64_t resultFixed;
-	int64_t m = mult(ea[a],z3);
-	ey = ea[a] + m;
 	/*
 	uint64_t round = ((uint64_t)ey << 32) >> 63;
 	resultFixed = round + ((((uint64_t)ey << 9) >> 9) >> 32);

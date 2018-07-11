@@ -1,3 +1,10 @@
 bug: 
 - big value x: solved --> no space to stock x in 64-bit fixed point form
 - small value x: diff = 1 (binary form) --> function toFixedPoint(float x) takes e (expo) as an attribute, in case of e>63, operation shift doesnt work correctly
+
+________________________
+
+10/7
+Diff result on diff pc -> WTF?
+Working on improve performance of multiplication.
+Using option -O3 makes program run faster but libc run slower --> WTF?
